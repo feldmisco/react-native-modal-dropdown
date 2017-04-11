@@ -42,10 +42,11 @@ export default class ModalDropdown extends Component {
     style: PropTypes.oneOfType([PropTypes.number, PropTypes.object, PropTypes.array]),
     textStyle: PropTypes.oneOfType([PropTypes.number, PropTypes.object, PropTypes.array]),
     dropdownStyle: PropTypes.oneOfType([PropTypes.number, PropTypes.object, PropTypes.array]),
-    imageSource: PropTypes.oneOfType([PropTypes.number, PropTypes.object, PropTypes.array]),
+    dropDownIndicatorImageSource: PropTypes.oneOfType([PropTypes.number, PropTypes.object, PropTypes.array]),
 
     adjustFrame: PropTypes.func,
     renderRow: PropTypes.func,
+    renderButton: PropTypes.func,
     renderSeparator: PropTypes.func,
 
     onDropdownWillShow: PropTypes.func,
@@ -153,7 +154,7 @@ export default class ModalDropdown extends Component {
   _renderButton() {
     return (
       <TouchableOpacity ref={button => this._button = button}
-                        disabled={this.props.disabled}
+                        disabled={this.props.disabled || this.props.options.length < 2}
                         accessible={this.props.accessible}
                         onPress={this._onButtonPress.bind(this)}>
         {
@@ -161,13 +162,10 @@ export default class ModalDropdown extends Component {
           (
             <View style={styles.button}>
               <View style={styles.buttonTextContainer}>
-                  <Text style={[styles.buttonText, this.props.textStyle]}
-                        numberOfLines={1}>
-                    {this.state.buttonText}
-                  </Text>
+                  {this.props.renderButton(this.state.selectedIndex)}
               </View>
-              {this.props.imageSource && (<View style={styles.buttonImageContainer}>
-                  <Image source={this.props.imageSource} style={styles.buttonImage}/>
+              {this.props.options.length > 1 && this.props.dropDownIndicatorImageSource && (<View style={styles.buttonImageContainer}>
+                  <Image source={this.props.dropDownIndicatorImageSource} style={styles.buttonImage}/>
               </View>)}
             </View>
           )
